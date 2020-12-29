@@ -28,11 +28,9 @@ someFunc = do
 
 ok :: (Int, Int, Char, String) -> Bool
 ok (minInt, maxInt, char, pwd) =
-  let cnt = count char pwd
-  in cnt <= maxInt && cnt >= minInt
-
-count :: Eq a => a -> [a] -> Int
-count x = length . filter (x==)
+  let match1 = pwd!!(minInt - 1) == char
+      match2 = pwd!!(maxInt - 1) == char
+  in (match1 || match2) && not (match1 && match2)
 
 readCode :: String -> (Int, Int, Char, String)
 readCode s =
