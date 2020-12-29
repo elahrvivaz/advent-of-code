@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5e96a946b1cc0d4c6faf075ca8044b206803c8e0ee6f6228d61dde4a1aebb0a9
+-- hash: a37e5be1aeb0b34d72eadbed4bf01093ade07b26b4c169cc63f85c39d2dceda2
 
 name:           day04
 version:        0.1.0.0
@@ -34,6 +34,8 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , regex-base
+    , regex-posix
   default-language: Haskell2010
 
 executable day04-exe
@@ -46,6 +48,8 @@ executable day04-exe
   build-depends:
       base >=4.7 && <5
     , day04
+    , regex-base
+    , regex-posix
   default-language: Haskell2010
 
 test-suite day04-test
@@ -59,4 +63,6 @@ test-suite day04-test
   build-depends:
       base >=4.7 && <5
     , day04
+    , regex-base
+    , regex-posix
   default-language: Haskell2010
