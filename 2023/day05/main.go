@@ -3,13 +3,23 @@ package main
 import (
 	"fmt"
 	"math"
+	"os"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	// lines := strings.Split(sample, "\n")
-	lines := strings.Split(data, "\n")
+	var input string
+	if dat, err := os.ReadFile("input.txt"); err == nil {
+		input = string(dat)
+	} else {
+		fmt.Println("Can't read input")
+		panic(err)
+	}
+
+	var lines []string
+	lines = strings.Split(input, "\n")
+	// lines = strings.Split(sample, "\n")
 
 	seeds := []int64{}
 	seedStrings := strings.Split(strings.TrimPrefix(lines[0], "seeds: "), " ")
@@ -38,13 +48,20 @@ func main() {
 	}
 
 	min := int64(math.MaxInt64)
-	for _, seed := range seeds {
-		i := seed
-		for _, mapping := range mappings {
-			i = mapping.mapTo(i)
-		}
-		if i < min {
-			min = i
+	var i = 0
+	for i < len(seeds) {
+		start := seeds[i]
+		end := start + seeds[i+1]
+		i += 2
+		for start < end {
+			loc := start
+			start += 1
+			for _, mapping := range mappings {
+				loc = mapping.mapTo(loc)
+			}
+			if loc < min {
+				min = loc
+			}
 		}
 	}
 
@@ -114,4 +131,3 @@ humidity-to-location map:
 60 56 37
 56 93 4`
 
-const data string = ``
