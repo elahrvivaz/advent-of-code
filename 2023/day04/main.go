@@ -10,16 +10,21 @@ func main() {
 	lines := strings.Split(data, "\n")
 	sum := 0
 
-	for _, line := range lines {
-		fmt.Println(line)
-		line = line[strings.Index(line, ":")+1:]
-		fmt.Println(line)
+	stack := []int{}
+	for i := range lines {
+		stack = append(stack, i)
+	}
+	for len(stack) > 0 {
+		sum += 1
+		i := stack[0]
+		stack = stack[1:]
+		line := lines[i][strings.Index(lines[i], ":")+1:]
 		parts := strings.Split(line, "|")
 		left := strings.Trim(parts[0], " ")
 		right := strings.Trim(parts[1], " ")
 		winners := strings.Split(left, " ")
-		for i := range winners {
-			winners[i] = strings.Trim(winners[i], " ")
+		for j := range winners {
+			winners[j] = strings.Trim(winners[j], " ")
 		}
 		mine := strings.Split(right, " ")
 		count := 0
@@ -28,18 +33,15 @@ func main() {
 			if num != "" {
 				for _, winner := range winners {
 					if num == winner {
-						if count == 0 {
-							count = 1
-						} else {
-							count *= 2
-						}
+						count += 1
+						stack = append(stack, i+count)
 						break
 					}
 				}
 			}
 		}
-		sum += count
 	}
+
 	fmt.Println(sum)
 }
 
