@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -15,10 +16,19 @@ type PartNumber struct {
 }
 
 func main() {
+	var input string
+	if dat, err := os.ReadFile("input.txt"); err == nil {
+		input = string(dat)
+	} else {
+		fmt.Println("Can't read input")
+		panic(err)
+	}
+
+	lines := strings.Split(input, "\n")
+	// lines = strings.Split(sample, "\n")
+
 	symbol := regexp.MustCompile(`\*`)
 
-	// lines := strings.Split(sample, "\n")
-	lines := strings.Split(data, "\n")
 	sum := 0
 	var previousLine []PartNumber
 	var currentLine []PartNumber
@@ -86,4 +96,3 @@ const sample string = `467..114..
 ......755.
 ...$.*....
 .664.598..`
-const data string = ``

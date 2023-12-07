@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	// "regexp"
 	"math"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -14,20 +14,17 @@ type replace struct {
 }
 
 func main() {
-	// regex := regexp.MustCompile("[^0-9]")
-	// one := replace{"one", "1"}
-	// two := replace{"two", "2"}
-	// three := replace{"three", "3"}
-	// four := replace{"four", "4"}
-	// five := replace{"five", "5"}
-	// six := replace{"six", "6"}
-	// seven := replace{"seven", "7"}
-	// eight := replace{"eight", "8"}
-	// nine := replace{"nine", "9"}
-	// rs := []replace{one, two, three, four, five, six, seven, eight, nine}
+	var input string
+	if dat, err := os.ReadFile("input.txt"); err == nil {
+		input = string(dat)
+	} else {
+		fmt.Println("Can't read input")
+		panic(err)
+	}
 
-	// lines := strings.Split(sample, "\n")
-	lines := strings.Split(data, "\n")
+	lines := strings.Split(input, "\n")
+	// lines = strings.Split(sample, "\n")
+
 	sum := 0
 	for _, line := range lines {
 		line = line[5:] // strip off "game"
@@ -66,4 +63,3 @@ Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
 Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
 Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
 Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green`
-const data string = ``

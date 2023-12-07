@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -13,6 +14,17 @@ type replace struct {
 }
 
 func main() {
+	var input string
+	if dat, err := os.ReadFile("input.txt"); err == nil {
+		input = string(dat)
+	} else {
+		fmt.Println("Can't read input")
+		panic(err)
+	}
+
+	lines := strings.Split(input, "\n")
+	// lines = strings.Split(sample, "\n")
+
 	regex := regexp.MustCompile("[^0-9]")
 	one := replace{"one", "1"}
 	two := replace{"two", "2"}
@@ -25,7 +37,6 @@ func main() {
 	nine := replace{"nine", "9"}
 	rs := []replace{one, two, three, four, five, six, seven, eight, nine}
 
-	lines := strings.Split(input, "\n")
 	sum := 0
 	for _, line := range lines {
 		i := 0
@@ -59,4 +70,3 @@ xtwone3four
 4nineeightseven2
 zoneight234
 7pqrstsixteen`
-const input string = ``
