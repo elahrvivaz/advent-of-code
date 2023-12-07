@@ -15,10 +15,10 @@ type PartNumber struct {
 }
 
 func main() {
-	symbol := regexp.MustCompile("[^0-9.]")
+	symbol := regexp.MustCompile(`\*`)
 
-	lines := strings.Split(sample, "\n")
-	// lines := strings.Split(data, "\n")
+	// lines := strings.Split(sample, "\n")
+	lines := strings.Split(data, "\n")
 	sum := 0
 	var previousLine []PartNumber
 	var currentLine []PartNumber
@@ -44,16 +44,18 @@ func main() {
 			if match[1]-pos != 1 {
 				panic("found multi-word match " + lines[i])
 			}
-			for _, line := range [][]PartNumber{previousLine, currentLine, nextLine} {
-				for j := range line {
-					if (pos >= line[j].start && pos <= line[j].end) ||
-						line[j].start-pos == 1 {
-						if !line[j].matched {
-							sum += line[j].value
-							line[j].matched = true
-						}
-					}
+			allLines := append(append(previousLine, currentLine...), nextLine...)
+			matched := 0
+			ratio := 1
+			for _, part := range allLines {
+				if (pos >= part.start && pos <= part.end) ||
+					part.start-pos == 1 {
+					matched += 1
+					ratio *= part.value
 				}
+			}
+			if matched == 2 {
+				sum += ratio
 			}
 		}
 
