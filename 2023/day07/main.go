@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	// lines := getInput(true)
-	lines := getInput(false)
+	lines := getInput(true)
+	// lines := getInput(false)
 
 	hands := []*Hand{}
 	for _, line := range lines {
@@ -27,7 +27,7 @@ func main() {
 			case 'Q':
 				cards = append(cards, 12)
 			case 'J':
-				cards = append(cards, 11)
+				cards = append(cards, 1)
 			case 'T':
 				cards = append(cards, 10)
 			default:
@@ -87,25 +87,53 @@ func getType(cards string) Type {
 	for _, card := range cards {
 		counts[card] = counts[card] + 1
 	}
+	jokers := counts['J']
 	if length := len(counts); length == 5 {
-		return HighCard
+		if jokers == 0 {
+			return HighCard
+		} else {
+			return OnePair
+		}
 	} else if length == 4 {
-		return OnePair
+		if jokers == 0 {
+			return OnePair
+		} else {
+			return ThreeOfAKind
+		}
 	} else if length == 3 {
 		for _, value := range counts {
 			if value == 2 {
-				return TwoPair
+				if jokers == 0 {
+					return TwoPair
+				} else if jokers == 1 {
+					return FullHouse
+				} else { // jokers == 2
+					return FourOfAKind
+				}
 			} else if value == 3 {
-				return ThreeOfAKind
+				if jokers == 0 {
+					return ThreeOfAKind
+				} else { // jokers == 1 || jokers == 3
+					return FourOfAKind
+				}
+
 			}
 		}
 		panic("Unexpected counts: " + cards)
 	} else if length == 2 {
 		for _, value := range counts {
 			if value == 2 || value == 3 {
-				return FullHouse
+				if jokers == 0 {
+					return FullHouse
+				} else {
+					return FiveOfAKind
+				}
 			} else if value == 4 {
-				return FourOfAKind
+				if jokers == 0 {
+					return FourOfAKind
+				} else {
+					return FiveOfAKind
+				}
 			}
 		}
 		panic("Unexpected counts: " + cards)
