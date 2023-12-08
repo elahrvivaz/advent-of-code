@@ -13,8 +13,8 @@ func main() {
 	lines := getInput(false)
 
 	regex := regexp.MustCompile(`\s+`)
-	times := regex.Split(lines[0], -1)
-	distances := regex.Split(lines[1], -1)
+	times := strings.Split(regex.ReplaceAllString(lines[0], ""), ":")
+	distances := strings.Split(regex.ReplaceAllString(lines[1], ""), ":")
 	races := []Race{}
 
 	for i := range times {
@@ -45,7 +45,7 @@ func (r Race) wins() int {
 	hold := r.time / 2
 	dist := hold * (r.time - hold)
 	for dist > r.distance && hold > 0 {
-		fmt.Printf("hold %v distance %v\n", hold, dist)
+		// fmt.Printf("hold %v distance %v\n", hold, dist)
 		count += 1
 		hold -= 1
 		dist = hold * (r.time - hold)
