@@ -24,18 +24,14 @@ func main() {
 		}
 		stack = append(stack, cur)
 		for i := len(stack) - 1; i > 0; i -= 1 {
-			stack[i-1] = append(stack[i-1], stack[i-1].last()+stack[i].last())
+			stack[i-1] = append([]int{stack[i-1][0] - stack[i][0]}, stack[i-1]...)
 			// fmt.Println(stack[i-1])
 		}
-		sum += stack[0].last()
+		sum += stack[0][0]
 		// fmt.Println(stack[0].last())
 	}
 
 	fmt.Println(sum)
-}
-
-func (r Hist) last() int {
-	return r[len(r)-1]
 }
 
 func parseLine(line string) Hist {
