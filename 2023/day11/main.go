@@ -20,8 +20,8 @@ func main() {
 
 	print(starMap)
 
-	expandRows := []int{}
-	expandCols := []int{}
+	expandRows := map[int]bool{}
+	expandCols := map[int]bool{}
 
 	for i := len(starMap) - 1; i >= 0; i-- {
 		expand := true
@@ -32,7 +32,7 @@ func main() {
 			}
 		}
 		if expand {
-			expandRows = append(expandRows, i)
+			expandRows[i] = true
 		}
 	}
 
@@ -45,27 +45,27 @@ func main() {
 			}
 		}
 		if expand {
-			expandCols = append(expandCols, j)
+			expandCols[j] = true
 		}
 	}
 
-	for _, e := range expandRows {
-		starMap = append(starMap, starMap[len(starMap)-1])
-		for i := len(starMap) - 2; i > e; i-- {
-			starMap[i] = starMap[i-1]
+	// for _, e := range expandRows {
+	// 	starMap = append(starMap, starMap[len(starMap)-1])
+	// 	for i := len(starMap) - 2; i > e; i-- {
+	// 		starMap[i] = starMap[i-1]
 
-		}
+	// 	}
 
-	}
+	// }
 
-	for _, e := range expandCols {
-		for i := range starMap {
-			starMap[i] = append(starMap[i], starMap[i][len(starMap[i])-1])
-			for j := len(starMap[i]) - 2; j > e; j-- {
-				starMap[i][j] = starMap[i][j-1]
-			}
-		}
-	}
+	// for _, e := range expandCols {
+	// 	for i := range starMap {
+	// 		starMap[i] = append(starMap[i], starMap[i][len(starMap[i])-1])
+	// 		for j := len(starMap[i]) - 2; j > e; j-- {
+	// 			starMap[i][j] = starMap[i][j-1]
+	// 		}
+	// 	}
+	// }
 
 	print(starMap)
 
@@ -84,18 +84,39 @@ func main() {
 
 	print(starMap)
 
+	mult := 999999
 	sum := 0
-	for g1 := range locations {
-		for g2 := range locations {
+	for g1, loc1 := range locations {
+		for g2, loc2 := range locations {
 			if g1 < g2 {
-				dist := math.Abs(float64(locations[g1].i-locations[g2].i)) + math.Abs(float64(locations[g1].j-locations[g2].j))
-				fmt.Println("dist ", g1+1, g2+1, dist)
-				sum += int(dist)
+				numExpansions := 0
+				for i := min(loc1.i, loc2.i) + 1; i < max(loc1.i, loc2.i); i++ {
+					if expandRows[i] {
+						numExpansions++
+					}
+				}
+				for j := min(loc1.j, loc2.j) + 1; j < max(loc1.j, loc2.j); j++ {
+					if expandCols[j] {
+						numExpansions++
+					}
+				}
+				dist := int(math.Abs(float64(loc1.i-loc2.i)) + math.Abs(float64(loc1.j-loc2.j)))
+				// fmt.Println("dist ", g1+1, g2+1, dist)
+				// fmt.Println("dist ", g1+1, g2+1, dist+(numExpansions*mult))
+				sum += dist + (numExpansions * mult)
 			}
 		}
 	}
 
 	fmt.Println(sum)
+}
+
+func min(i1 int, i2 int) int {
+	return int(math.Min(float64(i1), float64(i2)))
+}
+
+func max(i1 int, i2 int) int {
+	return int(math.Max(float64(i1), float64(i2)))
 }
 
 func parseLine(line string) []int {
