@@ -16,23 +16,48 @@ func main() {
 	terrain := [][]Terrain{}
 	for _, line := range lines {
 		if line == "" {
-			sum += mirror(terrain)
+			sum += smudge(terrain)
 			terrain = [][]Terrain{}
 		} else {
 			terrain = append(terrain, parseLine(line))
 		}
 	}
 	if len(terrain) > 0 {
-		sum += mirror(terrain)
+		sum += smudge(terrain)
 	}
 
 	fmt.Println(sum)
 }
 
-func mirror(terrain [][]Terrain) int {
+func smudge(terrain [][]Terrain) int {
+	orig := mirror(terrain, -1)
+	// print(terrain)
+	for i := range terrain {
+		for j := range terrain[i] {
+			old := terrain[i][j]
+			if old == Rocks {
+				terrain[i][j] = Ash
+			} else {
+				terrain[i][j] = Rocks
+			}
+			// print(terrain)
+			line := mirror(terrain, orig)
+			if line != 0 {
+				// fmt.Println("found match ", line)
+				return line
+			} else {
+				terrain[i][j] = old
+			}
+		}
+	}
+	print(terrain)
+	panic("no smudge")
+}
+
+func mirror(terrain [][]Terrain, ignore int) int {
 	for i := 0; i < len(terrain)-1; i++ {
 		if compareRows(terrain, i, i+1) {
-			// fmt.Println("found match at ", i)
+			// fmt.Println("found horizontal match at ", i)
 			left := i - 1
 			right := i + 2
 			matched := true
@@ -43,14 +68,18 @@ func mirror(terrain [][]Terrain) int {
 				right++
 			}
 			if matched {
-				// fmt.Println("horizontal match at ", i)
-				return (i + 1) * 100
+				result := (i + 1) * 100
+				if result != ignore {
+					// fmt.Println("horizontal match at ", i)
+					return result
+				}
+				// fmt.Println("ignoring horizontal match at ", i)
 			}
 		}
 	}
 	for i := 0; i < len(terrain[0])-1; i++ {
 		if compareCols(terrain, i, i+1) {
-			// fmt.Println("found match at ", i)
+			// fmt.Println("found vertical match at ", i)
 			left := i - 1
 			right := i + 2
 			matched := true
@@ -61,8 +90,12 @@ func mirror(terrain [][]Terrain) int {
 				right++
 			}
 			if matched {
-				// fmt.Println("horizontal match at ", i)
-				return i + 1
+				result := i + 1
+				if result != ignore {
+					// fmt.Println("vertical match at ", i)
+					return result
+				}
+				// fmt.Println("ignoring vertical match at ", i)
 			}
 		}
 	}
@@ -85,6 +118,16 @@ func compareCols(terrain [][]Terrain, c1 int, c2 int) bool {
 		}
 	}
 	return true
+}
+
+func print(terrain [][]Terrain) {
+	for i := range terrain {
+		for j := range terrain[i] {
+			fmt.Print(terrain[i][j])
+		}
+		fmt.Println()
+	}
+	fmt.Println()
 }
 
 type Terrain string
@@ -128,7 +171,21 @@ const sample string = `#.##..##.
 ..##..###
 #....#..#`
 
-const sample2 string = ``
+const sample2 string = `...#..#
+...#..#
+##..##.
+.#.##.#
+..#..##
+..#.##.
+#.#.###
+##.##..
+##.##..
+#.#.###
+..#.##.
+..#..##
+.#.##.#
+##..##.
+...#..#`
 
 const sample3 string = ``
 
