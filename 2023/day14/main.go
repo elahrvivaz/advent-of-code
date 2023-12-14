@@ -17,9 +17,31 @@ func main() {
 	for _, line := range lines {
 		terrain = append(terrain, parseLine(line))
 	}
-	print(terrain)
-	tiltNorth(terrain)
-	print(terrain)
+
+	states := [][][]Terrain{}
+	iterations := 1000000000
+loop:
+	for i := 0; i < iterations; i++ {
+		spinCycle(terrain)
+		for j := range states {
+			if compare(terrain, states[j]) {
+				loop := i - j
+				fmt.Println("found loop of length ", loop, " from ", j, " to ", i)
+				k := i + 1
+				for k+loop < iterations {
+					k += loop
+				}
+				fmt.Println("skipping to ", k)
+				for k < iterations {
+					spinCycle(terrain)
+					k++
+				}
+				break loop
+
+			}
+		}
+		states = append(states, copy(terrain))
+	}
 
 	for i := range terrain {
 		weight := len(terrain) - i
@@ -52,70 +74,90 @@ func tiltNorth(terrain [][]Terrain) {
 	}
 }
 
-func mirror(terrain [][]Terrain, ignore int) int {
-	for i := 0; i < len(terrain)-1; i++ {
-		if compareRows(terrain, i, i+1) {
-			// fmt.Println("found horizontal match at ", i)
-			left := i - 1
-			right := i + 2
-			matched := true
-			for matched && left >= 0 && right < len(terrain) {
-				matched = compareRows(terrain, left, right)
-				// fmt.Println("comparing ", left, " ", right, " -> ", matched)
-				left--
-				right++
-			}
-			if matched {
-				result := (i + 1) * 100
-				if result != ignore {
-					// fmt.Println("horizontal match at ", i)
-					return result
+func tiltSouth(terrain [][]Terrain) {
+	for j := len(terrain[0]) - 1; j >= 0; j-- {
+		to := len(terrain) - 1
+		for i := len(terrain) - 1; i >= 0; i-- {
+			switch terrain[i][j] {
+			case RoundRock:
+				if to != i {
+					terrain[to][j] = RoundRock
+					terrain[i][j] = Ground
 				}
-				// fmt.Println("ignoring horizontal match at ", i)
+				to--
+			case CubeRock:
+				to = i - 1
+			case Ground: // no-op
 			}
 		}
 	}
-	for i := 0; i < len(terrain[0])-1; i++ {
-		if compareCols(terrain, i, i+1) {
-			// fmt.Println("found vertical match at ", i)
-			left := i - 1
-			right := i + 2
-			matched := true
-			for matched && left >= 0 && right < len(terrain[0]) {
-				matched = compareCols(terrain, left, right)
-				// fmt.Println("comparing ", left, " ", right, " -> ", matched)
-				left--
-				right++
-			}
-			if matched {
-				result := i + 1
-				if result != ignore {
-					// fmt.Println("vertical match at ", i)
-					return result
-				}
-				// fmt.Println("ignoring vertical match at ", i)
-			}
-		}
-	}
-	return 0
 }
 
-func compareRows(terrain [][]Terrain, r1 int, r2 int) bool {
-	for i := range terrain[r1] {
-		if terrain[r1][i] != terrain[r2][i] {
-			return false
-		}
-	}
-	return true
-}
-
-func compareCols(terrain [][]Terrain, c1 int, c2 int) bool {
+func tiltEast(terrain [][]Terrain) {
 	for i := range terrain {
-		if terrain[i][c1] != terrain[i][c2] {
-			return false
+		to := len(terrain[i]) - 1
+		for j := len(terrain[i]) - 1; j >= 0; j-- {
+			switch terrain[i][j] {
+			case RoundRock:
+				if to != j {
+					terrain[i][to] = RoundRock
+					terrain[i][j] = Ground
+				}
+				to--
+			case CubeRock:
+				to = j - 1
+			case Ground: // no-op
+			}
+		}
+	}
+}
+
+func tiltWest(terrain [][]Terrain) {
+	for i := range terrain {
+		to := 0
+		for j := range terrain[i] {
+			switch terrain[i][j] {
+			case RoundRock:
+				if to != j {
+					terrain[i][to] = RoundRock
+					terrain[i][j] = Ground
+				}
+				to++
+			case CubeRock:
+				to = j + 1
+			case Ground: // no-op
+			}
+		}
+	}
+}
+
+func spinCycle(terrain [][]Terrain) {
+	tiltNorth(terrain)
+	tiltWest(terrain)
+	tiltSouth(terrain)
+	tiltEast(terrain)
+}
+
+func compare(t1 [][]Terrain, t2 [][]Terrain) bool {
+	for i := range t1 {
+		for j := range t1[i] {
+			if t1[i][j] != t2[i][j] {
+				return false
+			}
 		}
 	}
 	return true
+}
+
+func copy(terrain [][]Terrain) [][]Terrain {
+	res := make([][]Terrain, len(terrain))
+	for i := range terrain {
+		res[i] = make([]Terrain, len(terrain[i]))
+		for j := range terrain[i] {
+			res[i][j] = terrain[i][j]
+		}
+	}
+	return res
 }
 
 func print(terrain [][]Terrain) {
@@ -157,21 +199,7 @@ O.#..O.#.#
 #....###..
 #OO..#....`
 
-const sample2 string = `...#..#
-...#..#
-##..##.
-.#.##.#
-..#..##
-..#.##.
-#.#.###
-##.##..
-##.##..
-#.#.###
-..#.##.
-..#..##
-.#.##.#
-##..##.
-...#..#`
+const sample2 string = ``
 
 const sample3 string = ``
 
