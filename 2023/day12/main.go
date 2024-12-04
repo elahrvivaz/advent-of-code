@@ -15,27 +15,36 @@ func main() {
 
 	sum := 0
 	for _, line := range lines {
-		springs, groups := parseLine(line)
-		count := 0
-		for _, attempt := range permutations(springs) {
-			if checkGroups(attempt, groups) {
-				count += 1
-			}
+		folded, foldedGroups := parseLine(line)
+		springs := folded
+		groups := foldedGroups
+		for i := 0; i < 4; i++ {
+			springs = append(springs, Unknown)
+			springs = append(springs, folded...)
+			groups = append(groups, foldedGroups...)
 		}
-		fmt.Println(springs, groups, count)
-		sum += count
+		sum += calc(springs, groups)
 	}
 
-	fmt.Println(sum)
+	fmt.Println("Result: ", sum)
 }
 
-func permutations(springs []Spring) [][]Spring {
-	firstUnknown := -1
+func calc(springs []Spring, groups []int) int {
+	fmt.Print(springs, groups, " ")
+	c := make(chan int)
+	go permutations(springs, groups, 0, c)
+	count := <-c
+	fmt.Println(count)
+	return count
+}
+
+func permutations(springs []Spring, groups []int, start int, c chan int) {
+	unknown := -1
 	damaged := make([]Spring, len(springs))
 	operationals := make([]Spring, len(springs))
-	for i, s := range springs {
-		if s == Unknown && firstUnknown == -1 {
-			firstUnknown = i
+	for i := 0; i < len(springs); i++ {
+		if springs[i] == Unknown && unknown == -1 {
+			unknown = i
 			damaged[i] = Damaged
 			operationals[i] = Operational
 		} else {
@@ -43,10 +52,22 @@ func permutations(springs []Spring) [][]Spring {
 			operationals[i] = springs[i]
 		}
 	}
-	if firstUnknown == -1 {
-		return [][]Spring{springs}
+	if unknown == -1 {
+		if checkGroups(springs, groups) {
+			c <- 1
+		} else {
+			c <- 0
+		}
+	} else if checkPrefix(springs, groups, unknown) {
+		d := make(chan int)
+		o := make(chan int)
+		go permutations(damaged, groups, unknown+1, d)
+		go permutations(operationals, groups, unknown+1, o)
+		c1 := <-d
+		c2 := <-o
+		c <- c1 + c2
 	} else {
-		return append(permutations(damaged), permutations(operationals)...)
+		c <- 0
 	}
 }
 
@@ -57,6 +78,30 @@ const (
 	Damaged     Spring = "#"
 	Unknown     Spring = "?"
 )
+
+func checkPrefix(spring []Spring, groups []int, to int) bool {
+	cur := 0
+	group := 0
+	for i := 0; i < to; i++ {
+		switch spring[i] {
+		case Operational:
+			if cur != 0 {
+				if len(groups) <= group || groups[group] != cur {
+					return false
+				}
+				cur = 0
+				group++
+			}
+		case Damaged:
+			cur++
+		default:
+			print(spring)
+			panic("Bad spring: " + spring[i])
+		}
+	}
+
+	return true
+}
 
 func checkGroups(spring []Spring, groups []int) bool {
 	cur := 0
@@ -74,7 +119,8 @@ func checkGroups(spring []Spring, groups []int) bool {
 		case Damaged:
 			cur++
 		default:
-			panic("Bad spring")
+			print(spring)
+			panic("Bad spring: " + c)
 		}
 	}
 	if cur != 0 {
@@ -82,6 +128,13 @@ func checkGroups(spring []Spring, groups []int) bool {
 	} else {
 		return len(groups) == i
 	}
+}
+
+func print(spring []Spring) {
+	for _, c := range spring {
+		fmt.Print(c)
+	}
+	fmt.Println()
 }
 
 func parseLine(line string) ([]Spring, []int) {
