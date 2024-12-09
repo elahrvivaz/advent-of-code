@@ -3,10 +3,10 @@ package day02
 
 object Day02 extends Aoc {
 
-  override def part1(lines: Iterator[String]): String =
+  override def part1(lines: List[String]): String =
     lines.count(line => check(line.split(" +").map(_.toInt))).toString
 
-  override def part2(lines: Iterator[String]): String = {
+  override def part2(lines: List[String]): String = {
     lines.count { line =>
       val nums = line.split(" +").map(_.toInt)
       val removed = Array.ofDim[Int](nums.length - 1)

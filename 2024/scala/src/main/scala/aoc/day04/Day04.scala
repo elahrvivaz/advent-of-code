@@ -3,7 +3,7 @@ package day04
 
 object Day04 extends Aoc {
 
-  override def part1(lines: Iterator[String]): String = {
+  override def part1(lines: List[String]): String = {
     val matrix: Array[Array[Char]] = lines.map(_.toCharArray).toArray
     var count = 0
     var i, j = 0
@@ -57,7 +57,7 @@ object Day04 extends Aoc {
     count
   }
 
-  override def part2(lines: Iterator[String]): String = {
+  override def part2(lines: List[String]): String = {
     val matrix: Array[Array[Char]] = lines.map(_.toCharArray).toArray
     var count = 0
     var i, j = 1
