@@ -1,7 +1,7 @@
 package aoc
 
+import java.net.URL
 import scala.io.{Codec, Source}
-import scala.util.Try
 
 trait Aoc {
 
@@ -13,33 +13,48 @@ trait Aoc {
 
   private def doPart1(): Unit = {
     println("Part 1")
-    println("Sample: " + doPart(loadSample, part1))
-    println("Input: " + doPart(loadInput, part1))
+    var i = 1
+    doPart(loadSamples, part1).foreach { output =>
+      println(s"Sample $i: $output")
+      i += 1
+    }
+    println("Input: " + doPart(Seq(loadInput), part1).head)
   }
 
   private def doPart2(): Unit = {
     println("Part 2")
-    println("Sample: " + doPart(loadSample2, part2))
-    println("Input: " + doPart(loadInput, part2))
-  }
-
-  private def doPart(source: () => Source, part: List[String] => String): String = {
-    val input = source()
-    val lines = try { input.getLines().toList } finally {
-      input.close()
+    var i = 1
+    doPart(loadSamples, part2).foreach { output =>
+      println(s"Sample $i: $output")
+      i += 1
     }
-    val start = System.nanoTime()
-    val res = part(lines)
-    s"$res in ${(System.nanoTime() - start) / 1000000} ms"
+    println("Input: " + doPart(Seq(loadInput), part2).head)
   }
 
-  private def loadSample(): Source = load("sample")
+  private def doPart(sources: Seq[() => Source], part: List[String] => String): Seq[String] = {
+    sources.map { source =>
+      val input = source()
+      val lines = try {
+        input.getLines().toList
+      } finally {
+        input.close()
+      }
+      val start = System.nanoTime()
+      val res = part(lines)
+      s"$res in ${(System.nanoTime() - start) / 1000000} ms"
+    }
+  }
 
-  private def loadSample2(): Source = Try(load("sample2")).getOrElse(load("sample"))
+  private def loadSamples: Seq[() => Source] =
+    (Iterator.single("") ++ Iterator.tabulate(10)(_.toString))
+      .map(s => getClass.getResource(s"sample$s"))
+      .filter(_ != null)
+      .map(u => () => load(u))
+      .toSeq
 
-  private def loadInput(): Source = load("input")
+  private def loadInput(): Source = load(getClass.getResource("input"))
 
-  private def load(name: String): Source = Source.fromResource(s"${getClass.getPackageName.replace('.', '/')}/$name")(Codec.UTF8)
+  private def load(resource: URL): Source = Source.fromURL(resource)(Codec.UTF8)
 
   def part1(lines: List[String]): String
 
