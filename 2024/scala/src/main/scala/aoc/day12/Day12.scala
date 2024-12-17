@@ -6,7 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 
 object Day12 extends Aoc {
 
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val map = lines.map(_.toCharArray).toArray
     val regions = Array.fill(map.length)(Array.fill(map.head.length)(-1))
     val numRegions = populateRegions(map, regions)
@@ -44,10 +44,10 @@ object Day12 extends Aoc {
       price += (areas(i) * perimeters(i))
       i += 1
     }
-    price.toString
+    price
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val map = lines.map(_.toCharArray).toArray
     val regions = Array.fill(map.length)(Array.fill(map.head.length)(-1))
     val numRegions = populateRegions(map, regions)
@@ -86,7 +86,7 @@ object Day12 extends Aoc {
       price += (areas(i) * sides(i))
       i += 1
     }
-    price.toString
+    price
   }
 
   /**

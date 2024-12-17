@@ -6,7 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 
 object Day08 extends Aoc {
 
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val grid: Array[Array[Char]] = lines.map(_.toCharArray).toArray
     val antinodes = scala.collection.mutable.Set.empty[(Int, Int)]
     val freqs = parseGrid(grid)
@@ -21,10 +21,10 @@ object Day08 extends Aoc {
         i += 1
       }
     }
-    antinodes.size.toString
+    antinodes.size
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val grid: Array[Array[Char]] = lines.map(_.toCharArray).toArray
     val antinodes = scala.collection.mutable.Set.empty[(Int, Int)]
     val freqs = parseGrid(grid)
@@ -39,7 +39,7 @@ object Day08 extends Aoc {
         i += 1
       }
     }
-    antinodes.size.toString
+    antinodes.size
   }
 
   private def findAntiNodes(n1: (Int, Int), n2: (Int, Int)): Seq[(Int, Int)] = {

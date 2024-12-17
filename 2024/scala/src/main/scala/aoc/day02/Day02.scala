@@ -3,10 +3,10 @@ package day02
 
 object Day02 extends Aoc {
 
-  override def part1(lines: List[String]): String =
-    lines.count(line => check(line.split(" +").map(_.toInt))).toString
+  override def part1(lines: List[String]): Long =
+    lines.count(line => check(line.split(" +").map(_.toInt)))
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     lines.count { line =>
       val nums = line.split(" +").map(_.toInt)
       val removed = Array.ofDim[Int](nums.length - 1)
@@ -15,7 +15,7 @@ object Day02 extends Aoc {
         System.arraycopy(nums, i + 1, removed, i, (nums.length - 1) - i)
         check(removed)
       }
-    }.toString
+    }
   }
 
   private def check(in: Seq[Int]): Boolean = {

@@ -6,16 +6,14 @@ object Day07 extends Aoc {
   private val opPermutationsPart1 = scala.collection.mutable.Map.empty[Long, Seq[Seq[Op]]]
   private val opPermutationsPart2 = scala.collection.mutable.Map.empty[Long, Seq[Seq[Op]]]
 
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val equations = lines.map(Equation.apply)
-    val sum = equations.collect { case e if validPart1(e) => e.result }.sum
-    sum.toString
+    equations.collect { case e if validPart1(e) => e.result }.sum
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val equations = lines.map(Equation.apply)
-    val sum = equations.collect { case e if validPart2(e) => e.result }.sum
-    sum.toString
+    equations.collect { case e if validPart2(e) => e.result }.sum
   }
 
   private def validPart1(e: Equation): Boolean = {

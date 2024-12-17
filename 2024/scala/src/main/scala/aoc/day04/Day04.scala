@@ -3,7 +3,7 @@ package day04
 
 object Day04 extends Aoc {
 
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val matrix: Array[Array[Char]] = lines.map(_.toCharArray).toArray
     var count = 0
     var i, j = 0
@@ -17,7 +17,7 @@ object Day04 extends Aoc {
       i += 1
       j = 0
     }
-    count.toString
+    count
   }
 
   private def search1(matrix: Array[Array[Char]], i: Int, j: Int): Int = {
@@ -57,7 +57,7 @@ object Day04 extends Aoc {
     count
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val matrix: Array[Array[Char]] = lines.map(_.toCharArray).toArray
     var count = 0
     var i, j = 1
@@ -71,7 +71,7 @@ object Day04 extends Aoc {
       i += 1
       j = 1
     }
-    count.toString
+    count
   }
 
   private def search2(matrix: Array[Array[Char]], i: Int, j: Int): Int = {

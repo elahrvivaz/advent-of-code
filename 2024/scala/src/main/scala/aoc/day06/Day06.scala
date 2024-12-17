@@ -3,7 +3,7 @@ package day06
 
 object Day06 extends Aoc {
 
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val grid: Array[Array[Char]] = lines.map(_.toCharArray).toArray
     var (i, j) = findStart(grid)
 
@@ -52,10 +52,10 @@ object Day06 extends Aoc {
       }
     }
 
-    result.size.toString
+    result.size
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val grid: Array[Array[Char]] = lines.map(_.toCharArray).toArray
     val start = findStart(grid)
 
@@ -80,7 +80,7 @@ object Day06 extends Aoc {
       i += 1
     }
 
-    loops.toString
+    loops
   }
 
   private def findStart(grid: Array[Array[Char]]): (Int, Int) = {

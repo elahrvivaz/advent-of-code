@@ -9,8 +9,7 @@ object Day09 extends Aoc {
   private val printPart1 = false
   private val printPart2 = false
 
-
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val diskMap = lines.head.toCharArray.map(_.toInt - 48)
     if (printPart1) {
       printDiskMap(diskMap)
@@ -71,10 +70,10 @@ object Day09 extends Aoc {
     if (printPart1) {
       println
     }
-    checksum.toString
+    checksum
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val diskMap = lines.head.toCharArray.map(_.toInt - 48)
     val expandedDisk = expand(diskMap)
     if (printPart2) {
@@ -114,7 +113,7 @@ object Day09 extends Aoc {
       }
       i += 1
     }
-    checksum.toString
+    checksum
   }
 
   private def expand(diskMap: Array[Int]): Array[Int] = {

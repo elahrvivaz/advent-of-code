@@ -6,7 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 
 object Day10 extends Aoc {
 
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val map = lines.map(_.toCharArray.map(_.toInt - 48)).toArray
     val trailheads = findTrailheads(map)
     val trails = ArrayBuffer(trailheads.map(Seq(_)): _*)
@@ -33,10 +33,10 @@ object Day10 extends Aoc {
         }
       }
     }
-    scores.size.toString
+    scores.size
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val map = lines.map(_.toCharArray.map(_.toInt - 48)).toArray
     val trailheads = findTrailheads(map)
     val trails = ArrayBuffer(trailheads.map(Seq(_)): _*)
@@ -63,7 +63,7 @@ object Day10 extends Aoc {
         }
       }
     }
-    count.toString
+    count
   }
 
   private def findTrailheads(map: Array[Array[Int]]): Seq[(Int, Int)] = {

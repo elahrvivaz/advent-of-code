@@ -31,7 +31,7 @@ trait Aoc {
     println("Input: " + doPart(Seq(loadInput), part2).head)
   }
 
-  private def doPart(sources: Seq[() => Source], part: List[String] => String): Seq[String] = {
+  private def doPart(sources: Seq[() => Source], part: List[String] => Long): Seq[String] = {
     sources.map { source =>
       val input = source()
       val lines = try {
@@ -56,7 +56,7 @@ trait Aoc {
 
   private def load(resource: URL): Source = Source.fromURL(resource)(Codec.UTF8)
 
-  def part1(lines: List[String]): String
+  def part1(lines: List[String]): Long
 
-  def part2(lines: List[String]): String
+  def part2(lines: List[String]): Long
 }

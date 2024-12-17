@@ -6,7 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 
 object Day14 extends Aoc {
 
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val robots = lines.map(Robot.apply)
     val grid = if (robots.lengthCompare(20) < 0) {
       // sample
@@ -17,19 +17,19 @@ object Day14 extends Aoc {
     val elapsed = grid.moveRobots(100)
     val quadrants = elapsed.robotsPerQuadrant
     val score = quadrants.reduceLeft { case (left, right) => left * right }
-    score.toString
+    score
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val robots = lines.map(Robot.apply)
     if (robots.lengthCompare(20) < 0) {
       // sample
-      ""
+      0
     } else {
       val grids = Range(1, 10000).foldLeft(Seq(0 -> Grid(101, 103, robots))) { case (grids, i) => grids :+ i -> grids.last._2.moveRobots(1) }
       val (i, grid) = grids.minBy(_._2.adjacencyScore)
       grid.printGrid()
-      i.toString
+      i
     }
 
   }

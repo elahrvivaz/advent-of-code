@@ -6,14 +6,14 @@ import scala.collection.mutable.ArrayBuffer
 
 object Day13 extends Aoc {
 
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val machines = parseMachines(lines)
-    machines.flatMap(_.solvePart2()).sum.toString
+    machines.flatMap(_.solvePart2()).sum
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val machines = parseMachines(lines).map(m => m.copy(prize = Prize(m.prize.x + 10000000000000d, m.prize.y + 10000000000000d)))
-    machines.flatMap(_.solvePart2()).sum.toString
+    machines.flatMap(_.solvePart2()).sum
   }
 
   private def parseMachines(lines: List[String]): List[Machine] = lines.filter(_.nonEmpty).grouped(3).map(Machine.apply).toList

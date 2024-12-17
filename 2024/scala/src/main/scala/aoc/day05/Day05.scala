@@ -5,21 +5,21 @@ import scala.collection.mutable.ArrayBuffer
 
 object Day05 extends Aoc {
 
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val split = lines.indexOf("")
     val rules = lines.take(split).map(Rule.apply)
     val instructions = lines.drop(split + 1).map(_.split(',').map(_.toInt).toList)
     val valid = instructions.filter(i => rules.forall(_.verify(i)))
-    valid.map(nums => nums(nums.length / 2)).sum.toString
+    valid.map(nums => nums(nums.length / 2)).sum
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val split = lines.indexOf("")
     val rules = Rules(lines.take(split).map(Rule.apply))
     val instructions = lines.drop(split + 1).map(_.split(',').map(_.toInt).toList)
     val invalid = instructions.filterNot(i => rules.forall(_.verify(i)))
     val fixed = invalid.map(i => fix(i, rules.filter(r => i.contains(r.before) && i.intersect(r.after).nonEmpty)))
-    fixed.map(nums => nums(nums.length / 2)).sum.toString
+    fixed.map(nums => nums(nums.length / 2)).sum
   }
 
   def fix(inst: Seq[Int], rules: Seq[Rules]): Seq[Int] = {

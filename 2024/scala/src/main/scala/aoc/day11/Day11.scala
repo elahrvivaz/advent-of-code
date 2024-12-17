@@ -6,14 +6,14 @@ object Day11 extends Aoc {
 
   private val cache = scala.collection.mutable.Map.empty[(Long, Int), Long]
 
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val stones = lines.head.split(" +").map(_.toLong).toSeq
-    stones.map(_.blink(25)).sum.toString
+    stones.map(_.blink(25)).sum
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val stones = lines.head.split(" +").map(_.toLong).toSeq
-    stones.map(_.blink(75)).sum.toString
+    stones.map(_.blink(75)).sum
   }
 
   implicit class Stone(val num: Long) extends AnyRef {

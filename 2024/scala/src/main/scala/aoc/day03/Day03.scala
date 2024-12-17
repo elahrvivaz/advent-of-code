@@ -3,7 +3,7 @@ package day03
 
 object Day03 extends Aoc {
 
-  override def part1(lines: List[String]): String = {
+  override def part1(lines: List[String]): Long = {
     val regex = """mul\((\d{1,3}),(\d{1,3})\)""".r
     var sum = 0
     lines.foreach { line =>
@@ -11,10 +11,10 @@ object Day03 extends Aoc {
         sum += (m.group(1).toInt * m.group(2).toInt)
       }
     }
-    sum.toString
+    sum
   }
 
-  override def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): Long = {
     val regex = """mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\)""".r
     var sum = 0
     var enabled = true
@@ -29,6 +29,6 @@ object Day03 extends Aoc {
         }
       }
     }
-    sum.toString
+    sum
   }
 }
